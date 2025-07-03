@@ -126,11 +126,9 @@ const Command = await mockList(t)
 const runCommand = async (
   {
     options = {},
-    positionals = [],
     values,
   }: {
     options?: object
-    positionals?: string[]
     values: Partial<LoadedConfig['values']> & {
       view: Exclude<LoadedConfig['values']['view'], 'inspect'>
     }
@@ -139,10 +137,10 @@ const runCommand = async (
 ) => {
   const config = {
     options,
-    positionals,
+    positionals: [], // Empty positionals since we don't support them anymore
     values,
     get: (key: string) => (values as any)[key],
-  } as LoadedConfig
+  } as unknown as LoadedConfig
   const res = await cmd.command(config)
   const output = cmd.views[values.view](
     res,
@@ -187,51 +185,7 @@ t.test('list', async t => {
     'should list mermaid in json format',
   )
 
-  t.matchSnapshot(
-    await runCommand({
-      positionals: ['*'],
-      values: { view: 'human' },
-      options,
-    }),
-    'should list all pkgs in human readable format',
-  )
 
-  t.matchSnapshot(
-    await runCommand({
-      positionals: ['*'],
-      values: { view: 'json' },
-      options,
-    }),
-    'should list all pkgs in json format',
-  )
-
-  t.matchSnapshot(
-    await runCommand({
-      positionals: ['*'],
-      values: { view: 'mermaid' },
-      options,
-    }),
-    'should list all pkgs in mermaid format',
-  )
-
-  await t.rejects(
-    Command.command({
-      positionals: ['*:malware'],
-      options,
-      get: () => undefined,
-    } as unknown as LoadedConfig),
-    /Failed to parse :malware selector/,
-    'should fail to run with no security archive',
-  )
-
-  t.matchSnapshot(
-    await runCommand({
-      positionals: ['@foo/bazz', 'bar'],
-      values: { view: 'human' },
-      options,
-    }),
-    'should list all pkgs in human format',
-  )
 
   await t.test('workspaces', async t => {
     const mainManifest = {
@@ -314,18 +268,6 @@ t.test('list', async t => {
     t.matchSnapshot(
       await runCommand(
         {
-          positionals: [':scope'],
-          values: { view: 'human', workspace: ['a'] },
-          options,
-        },
-        C,
-      ),
-      'should use specified workspace as scope selector',
-    )
-
-    t.matchSnapshot(
-      await runCommand(
-        {
           values: { view: 'human', scope: ':workspace#a' },
           options,
         },
@@ -365,7 +307,6 @@ t.test('list', async t => {
 
     await runCommand(
       {
-        positionals: [],
         values: {
           workspace: [],
           view: 'gui',
@@ -388,7 +329,6 @@ t.test('list', async t => {
     t.matchSnapshot(
       await runCommand(
         {
-          positionals: ['*'],
           values: {
             color: true,
             view: 'human',
@@ -445,7 +385,6 @@ t.test('list', async t => {
     const Command = await mockList(t, { graph })
     const result = await runCommand(
       {
-        positionals: [], // No positionals to test default query logic
         values: {
           view: 'human',
           scope: '#a', // Should trigger the default selection logic
@@ -496,7 +435,6 @@ t.test('list', async t => {
 
     const result = await runCommand(
       {
-        positionals: ['*'],
         values: {
           scope: ':workspace',
           view: 'human',
@@ -602,7 +540,6 @@ t.test('list', async t => {
 
     const result = await runCommand(
       {
-        positionals: ['*'],
         values: {
           scope: '#foo',
           view: 'human',

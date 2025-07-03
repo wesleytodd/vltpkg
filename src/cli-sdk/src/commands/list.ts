@@ -26,7 +26,7 @@ export const usage: CommandUsage = () =>
     command: 'ls',
     usage: [
       '',
-      '[query | specs] [--view=human | json | mermaid | gui]',
+      '[--view=human | json | mermaid | gui]',
     ],
     description: `List installed dependencies matching given package names or resulting
       packages from matching a given Dependency Selector Syntax query if one
@@ -42,20 +42,6 @@ export const usage: CommandUsage = () =>
       '': {
         description:
           'List direct dependencies of the current project / workspace',
-      },
-      '"*"': {
-        description:
-          'List all dependencies for the current project / workspace',
-      },
-      'foo bar baz': {
-        description: `List all dependencies named 'foo', 'bar', or 'baz'`,
-      },
-      [`'[name="@scoped/package"] > *'`]: {
-        description:
-          'Lists direct dependencies of a specific package',
-      },
-      [`'*:workspace > *:peer'`]: {
-        description: 'List all peer dependencies of all workspaces',
       },
     },
     options: {
@@ -97,16 +83,9 @@ export const command: CommandFn<ListResult> = async conf => {
     loadManifests: true,
   })
 
-  const queryString = conf.positionals
-    .map(k => (/^[@\w-]/.test(k) ? `#${k.replace(/\//, '\\/')}` : k))
-    .join(', ')
-  const securityArchive =
-    Query.hasSecuritySelectors(queryString) ?
-      await SecurityArchive.start({
-        graph,
-        specOptions: conf.options,
-      })
-    : undefined
+  // Remove positional parameter processing for queries
+  const queryString = ''
+  const securityArchive = undefined  // No longer needed since we don't process queries
   const query = new Query({
     graph,
     specOptions: conf.options,
@@ -172,9 +151,9 @@ export const command: CommandFn<ListResult> = async conf => {
       selectImportersQueryString
     : projectQueryString
 
-  // retrieve the selected nodes and edges
+  // retrieve the selected nodes and edges using only the default query
   const { edges, nodes } = await query.search(
-    queryString || defaultQueryString,
+    defaultQueryString,
     {
       signal: new AbortController().signal,
       scopeIDs: scopeIDs.length > 0 ? scopeIDs : undefined,
@@ -185,7 +164,7 @@ export const command: CommandFn<ListResult> = async conf => {
     importers,
     edges,
     nodes,
-    queryString: queryString || defaultQueryString,
-    highlightSelection: !!queryString,
+    queryString: defaultQueryString,
+    highlightSelection: false,  // No longer highlighting since no custom queries
   }
 }
