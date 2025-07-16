@@ -47,8 +47,6 @@ exports[`OverviewTabContent renders default 1`] = `
     <gui-contributor-list>
     </gui-contributor-list>
   </div>
-  <gui-aside-overview>
-  </gui-aside-overview>
 </gui-tabs-content>
 
 `;
@@ -88,8 +86,6 @@ exports[`OverviewTabContent renders with an aside and content 1`] = `
     <gui-contributor-list>
     </gui-contributor-list>
   </div>
-  <gui-aside-overview>
-  </gui-aside-overview>
 </gui-tabs-content>
 
 `;
@@ -134,8 +130,6 @@ This is a custom description
       </div>
     </div>
   </div>
-  <gui-aside-overview>
-  </gui-aside-overview>
 </gui-tabs-content>
 
 `;

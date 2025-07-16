@@ -79,16 +79,6 @@ vi.mock(
 )
 
 vi.mock(
-  '@/components/explorer-grid/selected-item/focused-view/use-focus-state.tsx',
-  () => ({
-    useFocusState: () => ({
-      isFocused: false,
-      setIsFocused: vi.fn(),
-    }),
-  }),
-)
-
-vi.mock(
   '@/components/explorer-grid/selected-item/aside/index.tsx',
   () => ({
     AsideOverview: 'gui-aside-overview',

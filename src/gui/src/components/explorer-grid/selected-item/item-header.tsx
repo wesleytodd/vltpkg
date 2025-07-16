@@ -33,6 +33,7 @@ import { DataBadge } from '@/components/ui/data-badge.tsx'
 import { ProgressCircle } from '@/components/ui/progress-circle.tsx'
 import { CrumbNav } from '@/components/navigation/crumb-nav.tsx'
 import { useFocusState } from '@/components/explorer-grid/selected-item/focused-view/use-focus-state.tsx'
+import { toHumanNumber } from '@/utils/human-number.ts'
 
 import type { SpecOptionsFilled } from '@vltpkg/spec/browser'
 import type { GridItemData } from '@/components/explorer-grid/types.ts'
@@ -103,35 +104,46 @@ const SpecOrigin = ({
 }
 
 interface ItemHeaderProps extends React.PropsWithChildren {
-  className?: string
+  classNames?: {
+    wrapperClassName?: string
+    contentClassName?: string
+    breadCrumbWrapperClassName?: string
+    packageImageSpecClassName?: string
+  }
 }
 
 export const ItemHeader = ({
-  className,
+  classNames,
   children,
 }: ItemHeaderProps) => {
   const breadcrumbs = useSelectedItemStore(
     state => state.selectedItem.breadcrumbs,
   )
+  const {
+    wrapperClassName,
+    contentClassName,
+    breadCrumbWrapperClassName,
+    packageImageSpecClassName,
+  } = classNames ?? {}
 
   return (
     <motion.div
       animate={{ opacity: 1 }}
       initial={{ opacity: 0 }}
-      className={cn('flex flex-col', className)}>
-      <div className="flex w-full flex-col">
+      className={cn('flex flex-col', wrapperClassName)}>
+      <div className={cn('flex w-full flex-col', contentClassName)}>
         <div
           className={cn(
             'flex h-10 w-full items-center border-b-[1px] border-muted pr-6 empty:hidden',
             breadcrumbs ? 'justify-between' : 'justify-end',
+            breadCrumbWrapperClassName,
           )}>
           <ItemBreadcrumbs />
           {children}
         </div>
-        <div className="flex w-full justify-between py-4">
-          <PackageImageSpec className="pl-6" />
-          <PackageOverallScore className="pr-6" />
-        </div>
+        <PackageImageSpec
+          className={cn('px-6 py-4', packageImageSpecClassName)}
+        />
       </div>
     </motion.div>
   )
@@ -188,21 +200,26 @@ const PackageOverallScore = ({
 
   return (
     <div className={className}>
-      <div
-        onClick={onClick}
-        className="duration-250 after:duration-250 relative z-[1] flex cursor-default flex-row gap-3 self-start transition-colors after:absolute after:inset-0 after:-left-[0.5rem] after:-top-[0.5rem] after:z-[-1] after:h-[calc(100%+1rem)] after:w-[calc(100%+1rem)] after:rounded-sm after:transition-colors after:content-[''] hover:after:bg-neutral-100 dark:hover:after:bg-neutral-800">
-        <ProgressCircle
-          value={averageScore}
-          variant={chartColor as ProgressCircleVariant}
-          strokeWidth={5}
-          className="size-9">
-          <p
-            className="font-mono text-xs font-medium tabular-nums"
-            style={{ color: textColor }}>
-            {averageScore}
-          </p>
-        </ProgressCircle>
-      </div>
+      <TooltipProvider delayDuration={150}>
+        <Tooltip>
+          <TooltipTrigger onClick={onClick}>
+            <ProgressCircle
+              value={averageScore}
+              variant={chartColor as ProgressCircleVariant}
+              strokeWidth={5}
+              className="size-9">
+              <p
+                className="font-mono text-xs font-medium tabular-nums"
+                style={{ color: textColor }}>
+                {averageScore}
+              </p>
+            </ProgressCircle>
+          </TooltipTrigger>
+          <TooltipPortal>
+            <TooltipContent>See more insights</TooltipContent>
+          </TooltipPortal>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   )
 }
@@ -277,33 +294,37 @@ const PackageImageSpec = ({ className }: { className?: string }) => {
         'flex flex-col gap-2 overflow-hidden',
         className,
       )}>
-      <div className="flex gap-4 overflow-hidden">
-        <PackageImage />
+      <div className="flex justify-between gap-4 overflow-hidden">
+        <div className="flex gap-4">
+          <PackageImage />
 
-        <ScrollArea className="w-full overflow-x-scroll">
-          <div className="flex h-full w-full flex-col justify-between">
-            <div className="flex w-full flex-col gap-0.5">
-              <div className="flex items-center gap-2">
-                <h1 className="w-fit max-w-full cursor-default align-baseline text-lg font-medium">
-                  {selectedItem.title}
-                  <span className="ml-2 font-courier text-sm text-muted-foreground">
-                    {selectedItem.version}
-                  </span>
-                </h1>
-                <PackageNewerVersionsAvailable />
+          <ScrollArea className="w-full overflow-x-scroll">
+            <div className="flex h-full w-full flex-col justify-between">
+              <div className="flex w-full flex-col gap-0.5">
+                <div className="flex items-center gap-2">
+                  <h1 className="w-fit max-w-full cursor-default align-baseline text-lg font-medium">
+                    {selectedItem.title}
+                    <span className="ml-2 font-courier text-sm text-muted-foreground">
+                      {selectedItem.version}
+                    </span>
+                  </h1>
+                  <PackageNewerVersionsAvailable />
+                </div>
+
+                {specOptions && (
+                  <SpecOrigin
+                    item={selectedItem}
+                    specOptions={specOptions}
+                  />
+                )}
               </div>
-
-              {specOptions && (
-                <SpecOrigin
-                  item={selectedItem}
-                  specOptions={specOptions}
-                />
-              )}
             </div>
-          </div>
 
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </div>
+
+        <PackageOverallScore />
       </div>
       <Publisher />
     </div>
@@ -321,49 +342,72 @@ const Publisher = ({ className }: { className?: string }) => {
     state => state.publisherAvatar,
   )
   const gitHeadShort = currentVersion?.gitHead?.slice(0, 6)
+  const downloads = useSelectedItemStore(
+    state => state.downloadsPerVersion,
+  )
+
+  const downloadCount = toHumanNumber(
+    (currentVersion?.version &&
+      downloads?.[currentVersion.version]) ??
+      0,
+  )
 
   if (!publisher) return null
 
   return (
     <div
       className={cn(
-        'flex h-[31.508px] items-center gap-2',
+        'flex w-full items-center justify-between gap-2 py-1',
         className,
       )}>
-      <Avatar>
-        <AvatarImage
-          className="size-5 rounded-sm border-[1px] border-border"
-          src={publisherAvatar?.src}
-          alt={publisherAvatar?.alt ?? 'Publisher Avatar'}
-        />
-        <AvatarFallback className="flex size-5 items-center justify-center rounded-sm bg-secondary bg-gradient-to-t from-neutral-100 to-neutral-400 p-0.5 outline outline-[1px] outline-border dark:from-neutral-500 dark:to-neutral-800" />
-      </Avatar>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger className="text-baseline cursor-default text-xs font-medium text-muted-foreground">
-            Published by:{' '}
-            <span className="text-foreground">{publisher.name}</span>
-            {currentVersion?.publishedDate && (
-              <span className="ml-2">
-                {gitHeadShort}
-                {' • '}
-                {formatDistanceStrict(
-                  currentVersion.publishedDate,
-                  new Date(),
-                  {
-                    addSuffix: true,
-                  },
-                )}
+      <div className="flex items-center gap-2">
+        <Avatar>
+          <AvatarImage
+            className="size-5 rounded-sm border-[1px] border-border"
+            src={publisherAvatar?.src}
+            alt={publisherAvatar?.alt ?? 'Publisher Avatar'}
+          />
+          <AvatarFallback className="flex size-5 items-center justify-center rounded-sm bg-secondary bg-gradient-to-t from-neutral-100 to-neutral-400 p-0.5 outline outline-[1px] outline-border dark:from-neutral-500 dark:to-neutral-800" />
+        </Avatar>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger className="text-baseline cursor-default text-xs font-medium text-muted-foreground">
+              Published by:{' '}
+              <span className="text-foreground">
+                {publisher.name}
               </span>
-            )}
-          </TooltipTrigger>
-          <TooltipPortal>
-            <TooltipContent align="start">
-              {publisher.name} {publisher.email}
-            </TooltipContent>
-          </TooltipPortal>
-        </Tooltip>
-      </TooltipProvider>
+              {currentVersion?.publishedDate && (
+                <span className="ml-2">
+                  {gitHeadShort}
+                  {' • '}
+                  {formatDistanceStrict(
+                    currentVersion.publishedDate,
+                    new Date(),
+                    {
+                      addSuffix: true,
+                    },
+                  )}
+                </span>
+              )}
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent align="start">
+                {publisher.name} {publisher.email}
+              </TooltipContent>
+            </TooltipPortal>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+      {downloadCount && (
+        <div className="flex items-center gap-2">
+          <p className="text-baseline cursor-default text-xs font-medium text-muted-foreground">
+            <span className="mr-1 text-foreground">
+              {downloadCount}
+            </span>
+            Downloads last week
+          </p>
+        </div>
+      )}
     </div>
   )
 }

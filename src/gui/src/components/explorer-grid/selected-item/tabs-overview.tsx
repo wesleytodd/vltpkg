@@ -8,7 +8,6 @@ import {
   MotionTabsContent,
   tabMotion,
 } from '@/components/explorer-grid/selected-item/helpers.tsx'
-import { useFocusState } from '@/components/explorer-grid/selected-item/focused-view/use-focus-state.tsx'
 import { AsideOverview } from '@/components/explorer-grid/selected-item/aside/index.tsx'
 
 export const OverviewTabButton = () => {
@@ -24,7 +23,9 @@ export const OverviewTabButton = () => {
 
 export const OverviewTabContent = () => {
   const manifest = useSelectedItemStore(state => state.manifest)
-  const { focused } = useFocusState()
+  const asideOverviewVisible = useSelectedItemStore(
+    state => state.asideOveriewVisible,
+  )
 
   const keywords =
     manifest?.keywords ?
@@ -72,7 +73,7 @@ export const OverviewTabContent = () => {
           </div>
         )}
       </div>
-      {!focused && <AsideOverview />}
+      {asideOverviewVisible && <AsideOverview />}
     </MotionTabsContent>
   )
 }

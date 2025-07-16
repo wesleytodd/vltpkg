@@ -380,6 +380,7 @@ type SelectedItemStoreState = DetailsInfo & {
   depWarnings: DepWarning[] | undefined
   duplicatedDeps: DuplicatedDeps | undefined
   depFunding: DepFunding | undefined
+  asideOveriewVisible?: boolean
 }
 
 type SelectedItemStoreAction = {
@@ -402,6 +403,9 @@ type SelectedItemStoreAction = {
   setDepFunding: (
     depFunding: SelectedItemStoreState['depFunding'],
   ) => void
+  setAsideOverviewVisible?: (
+    asideOveriewVisible: SelectedItemStoreState['asideOveriewVisible'],
+  ) => void
 }
 
 export type SelectedItemStore = SelectedItemStoreState &
@@ -413,11 +417,13 @@ const SelectedItemContext = createContext<
 
 type SelectedItemProviderProps = PropsWithChildren & {
   selectedItem: GridItemData
+  asideOveriewVisible?: boolean
 }
 
 export const SelectedItemProvider = ({
   children,
   selectedItem,
+  asideOveriewVisible = true,
 }: SelectedItemProviderProps) => {
   const specOptions = useGraphStore(state => state.specOptions)
   const q = useGraphStore(state => state.q)
@@ -434,6 +440,7 @@ export const SelectedItemProvider = ({
   const selectedItemStore = useRef(
     createStore<SelectedItemStore>(set => ({
       selectedItem,
+      asideOveriewVisible,
       manifest: selectedItem.to?.manifest ?? null,
       rawManifest: selectedItem.to?.rawManifest ?? null,
       packageScore: selectedItem.to?.insights.score,
@@ -465,6 +472,9 @@ export const SelectedItemProvider = ({
       setDepFunding: (
         depFunding: SelectedItemStoreState['depFunding'],
       ) => set(() => ({ depFunding })),
+      setAsideOverviewVisible: (
+        asideOveriewVisible: SelectedItemStoreState['asideOveriewVisible'],
+      ) => set(() => ({ asideOveriewVisible })),
     })),
   ).current
 

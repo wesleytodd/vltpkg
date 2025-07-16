@@ -9,9 +9,9 @@ exports[`ItemHeader renders with a package score 1`] = `
   <div class="flex w-full flex-col">
     <div class="flex h-10 w-full items-center border-b-[1px] border-muted pr-6 empty:hidden justify-end">
     </div>
-    <div class="flex w-full justify-between py-4">
-      <div class="flex flex-col gap-2 overflow-hidden pl-6">
-        <div class="flex gap-4 overflow-hidden">
+    <div class="flex flex-col gap-2 overflow-hidden px-6 py-4">
+      <div class="flex justify-between gap-4 overflow-hidden">
+        <div class="flex gap-4">
           <gui-avatar classname="aspect-square size-16">
             <gui-avatar-image
               classname="aspect-square size-16 rounded-md border-[1px] bg-secondary object-cover"
@@ -59,7 +59,35 @@ exports[`ItemHeader renders with a package score 1`] = `
             </gui-scroll-bar>
           </gui-scroll-area>
         </div>
-        <div class="flex h-[31.508px] items-center gap-2">
+        <div>
+          <gui-tooltip-provider delayduration="150">
+            <gui-tooltip>
+              <gui-tooltip-trigger>
+                <gui-progress-circle
+                  value="80"
+                  variant="success"
+                  strokewidth="5"
+                  classname="size-9"
+                >
+                  <p
+                    class="font-mono text-xs font-medium tabular-nums"
+                    style="color: oklch(0.696 0.17 162.48);"
+                  >
+                    80
+                  </p>
+                </gui-progress-circle>
+              </gui-tooltip-trigger>
+              <gui-tooltip-portal>
+                <gui-tooltip-content>
+                  See more insights
+                </gui-tooltip-content>
+              </gui-tooltip-portal>
+            </gui-tooltip>
+          </gui-tooltip-provider>
+        </div>
+      </div>
+      <div class="flex w-full items-center justify-between gap-2 py-1">
+        <div class="flex items-center gap-2">
           <gui-avatar>
             <gui-avatar-image
               classname="size-5 rounded-sm border-[1px] border-border"
@@ -86,22 +114,13 @@ exports[`ItemHeader renders with a package score 1`] = `
             </gui-tooltip>
           </gui-tooltip-provider>
         </div>
-      </div>
-      <div class="pr-6">
-        <div class="duration-250 after:duration-250 relative z-[1] flex cursor-default flex-row gap-3 self-start transition-colors after:absolute after:inset-0 after:-left-[0.5rem] after:-top-[0.5rem] after:z-[-1] after:h-[calc(100%+1rem)] after:w-[calc(100%+1rem)] after:rounded-sm after:transition-colors after:content-[''] hover:after:bg-neutral-100 dark:hover:after:bg-neutral-800">
-          <gui-progress-circle
-            value="80"
-            variant="success"
-            strokewidth="5"
-            classname="size-9"
-          >
-            <p
-              class="font-mono text-xs font-medium tabular-nums"
-              style="color: oklch(0.696 0.17 162.48);"
-            >
-              80
-            </p>
-          </gui-progress-circle>
+        <div class="flex items-center gap-2">
+          <p class="text-baseline cursor-default text-xs font-medium text-muted-foreground">
+            <span class="mr-1 text-foreground">
+              0
+            </span>
+            Downloads last week
+          </p>
         </div>
       </div>
     </div>
@@ -119,9 +138,9 @@ exports[`ItemHeader renders with a version information 1`] = `
   <div class="flex w-full flex-col">
     <div class="flex h-10 w-full items-center border-b-[1px] border-muted pr-6 empty:hidden justify-end">
     </div>
-    <div class="flex w-full justify-between py-4">
-      <div class="flex flex-col gap-2 overflow-hidden pl-6">
-        <div class="flex gap-4 overflow-hidden">
+    <div class="flex flex-col gap-2 overflow-hidden px-6 py-4">
+      <div class="flex justify-between gap-4 overflow-hidden">
+        <div class="flex gap-4">
           <gui-avatar classname="aspect-square size-16">
             <gui-avatar-image
               classname="aspect-square size-16 rounded-md border-[1px] bg-secondary object-cover"
@@ -169,7 +188,9 @@ exports[`ItemHeader renders with a version information 1`] = `
             </gui-scroll-bar>
           </gui-scroll-area>
         </div>
-        <div class="flex h-[31.508px] items-center gap-2">
+      </div>
+      <div class="flex w-full items-center justify-between gap-2 py-1">
+        <div class="flex items-center gap-2">
           <gui-avatar>
             <gui-avatar-image
               classname="size-5 rounded-sm border-[1px] border-border"
@@ -199,6 +220,14 @@ exports[`ItemHeader renders with a version information 1`] = `
             </gui-tooltip>
           </gui-tooltip-provider>
         </div>
+        <div class="flex items-center gap-2">
+          <p class="text-baseline cursor-default text-xs font-medium text-muted-foreground">
+            <span class="mr-1 text-foreground">
+              123.5K
+            </span>
+            Downloads last week
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -215,9 +244,9 @@ exports[`ItemHeader renders with custom registry item 1`] = `
   <div class="flex w-full flex-col">
     <div class="flex h-10 w-full items-center border-b-[1px] border-muted pr-6 empty:hidden justify-end">
     </div>
-    <div class="flex w-full justify-between py-4">
-      <div class="flex flex-col gap-2 overflow-hidden pl-6">
-        <div class="flex gap-4 overflow-hidden">
+    <div class="flex flex-col gap-2 overflow-hidden px-6 py-4">
+      <div class="flex justify-between gap-4 overflow-hidden">
+        <div class="flex gap-4">
           <gui-avatar classname="aspect-square size-16">
             <gui-avatar-image
               classname="aspect-square size-16 rounded-md border-[1px] bg-secondary object-cover"
@@ -272,7 +301,9 @@ exports[`ItemHeader renders with custom registry item 1`] = `
             </gui-scroll-bar>
           </gui-scroll-area>
         </div>
-        <div class="flex h-[31.508px] items-center gap-2">
+      </div>
+      <div class="flex w-full items-center justify-between gap-2 py-1">
+        <div class="flex items-center gap-2">
           <gui-avatar>
             <gui-avatar-image
               classname="size-5 rounded-sm border-[1px] border-border"
@@ -299,6 +330,14 @@ exports[`ItemHeader renders with custom registry item 1`] = `
             </gui-tooltip>
           </gui-tooltip-provider>
         </div>
+        <div class="flex items-center gap-2">
+          <p class="text-baseline cursor-default text-xs font-medium text-muted-foreground">
+            <span class="mr-1 text-foreground">
+              0
+            </span>
+            Downloads last week
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -315,9 +354,9 @@ exports[`ItemHeader renders with default git host item 1`] = `
   <div class="flex w-full flex-col">
     <div class="flex h-10 w-full items-center border-b-[1px] border-muted pr-6 empty:hidden justify-end">
     </div>
-    <div class="flex w-full justify-between py-4">
-      <div class="flex flex-col gap-2 overflow-hidden pl-6">
-        <div class="flex gap-4 overflow-hidden">
+    <div class="flex flex-col gap-2 overflow-hidden px-6 py-4">
+      <div class="flex justify-between gap-4 overflow-hidden">
+        <div class="flex gap-4">
           <gui-avatar classname="aspect-square size-16">
             <gui-avatar-image
               classname="aspect-square size-16 rounded-md border-[1px] bg-secondary object-cover"
@@ -371,7 +410,9 @@ exports[`ItemHeader renders with default git host item 1`] = `
             </gui-scroll-bar>
           </gui-scroll-area>
         </div>
-        <div class="flex h-[31.508px] items-center gap-2">
+      </div>
+      <div class="flex w-full items-center justify-between gap-2 py-1">
+        <div class="flex items-center gap-2">
           <gui-avatar>
             <gui-avatar-image
               classname="size-5 rounded-sm border-[1px] border-border"
@@ -397,6 +438,14 @@ exports[`ItemHeader renders with default git host item 1`] = `
               </gui-tooltip-portal>
             </gui-tooltip>
           </gui-tooltip-provider>
+        </div>
+        <div class="flex items-center gap-2">
+          <p class="text-baseline cursor-default text-xs font-medium text-muted-foreground">
+            <span class="mr-1 text-foreground">
+              0
+            </span>
+            Downloads last week
+          </p>
         </div>
       </div>
     </div>
@@ -414,9 +463,9 @@ exports[`ItemHeader renders with default item 1`] = `
   <div class="flex w-full flex-col">
     <div class="flex h-10 w-full items-center border-b-[1px] border-muted pr-6 empty:hidden justify-end">
     </div>
-    <div class="flex w-full justify-between py-4">
-      <div class="flex flex-col gap-2 overflow-hidden pl-6">
-        <div class="flex gap-4 overflow-hidden">
+    <div class="flex flex-col gap-2 overflow-hidden px-6 py-4">
+      <div class="flex justify-between gap-4 overflow-hidden">
+        <div class="flex gap-4">
           <gui-avatar classname="aspect-square size-16">
             <gui-avatar-image
               classname="aspect-square size-16 rounded-md border-[1px] bg-secondary object-cover"
@@ -464,7 +513,9 @@ exports[`ItemHeader renders with default item 1`] = `
             </gui-scroll-bar>
           </gui-scroll-area>
         </div>
-        <div class="flex h-[31.508px] items-center gap-2">
+      </div>
+      <div class="flex w-full items-center justify-between gap-2 py-1">
+        <div class="flex items-center gap-2">
           <gui-avatar>
             <gui-avatar-image
               classname="size-5 rounded-sm border-[1px] border-border"
@@ -490,6 +541,14 @@ exports[`ItemHeader renders with default item 1`] = `
               </gui-tooltip-portal>
             </gui-tooltip>
           </gui-tooltip-provider>
+        </div>
+        <div class="flex items-center gap-2">
+          <p class="text-baseline cursor-default text-xs font-medium text-muted-foreground">
+            <span class="mr-1 text-foreground">
+              0
+            </span>
+            Downloads last week
+          </p>
         </div>
       </div>
     </div>
@@ -507,9 +566,9 @@ exports[`ItemHeader renders with insights 1`] = `
   <div class="flex w-full flex-col">
     <div class="flex h-10 w-full items-center border-b-[1px] border-muted pr-6 empty:hidden justify-end">
     </div>
-    <div class="flex w-full justify-between py-4">
-      <div class="flex flex-col gap-2 overflow-hidden pl-6">
-        <div class="flex gap-4 overflow-hidden">
+    <div class="flex flex-col gap-2 overflow-hidden px-6 py-4">
+      <div class="flex justify-between gap-4 overflow-hidden">
+        <div class="flex gap-4">
           <gui-avatar classname="aspect-square size-16">
             <gui-avatar-image
               classname="aspect-square size-16 rounded-md border-[1px] bg-secondary object-cover"
@@ -557,7 +616,9 @@ exports[`ItemHeader renders with insights 1`] = `
             </gui-scroll-bar>
           </gui-scroll-area>
         </div>
-        <div class="flex h-[31.508px] items-center gap-2">
+      </div>
+      <div class="flex w-full items-center justify-between gap-2 py-1">
+        <div class="flex items-center gap-2">
           <gui-avatar>
             <gui-avatar-image
               classname="size-5 rounded-sm border-[1px] border-border"
@@ -584,6 +645,14 @@ exports[`ItemHeader renders with insights 1`] = `
             </gui-tooltip>
           </gui-tooltip-provider>
         </div>
+        <div class="flex items-center gap-2">
+          <p class="text-baseline cursor-default text-xs font-medium text-muted-foreground">
+            <span class="mr-1 text-foreground">
+              0
+            </span>
+            Downloads last week
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -600,9 +669,9 @@ exports[`ItemHeader renders with scoped registry item 1`] = `
   <div class="flex w-full flex-col">
     <div class="flex h-10 w-full items-center border-b-[1px] border-muted pr-6 empty:hidden justify-end">
     </div>
-    <div class="flex w-full justify-between py-4">
-      <div class="flex flex-col gap-2 overflow-hidden pl-6">
-        <div class="flex gap-4 overflow-hidden">
+    <div class="flex flex-col gap-2 overflow-hidden px-6 py-4">
+      <div class="flex justify-between gap-4 overflow-hidden">
+        <div class="flex gap-4">
           <gui-avatar classname="aspect-square size-16">
             <gui-avatar-image
               classname="aspect-square size-16 rounded-md border-[1px] bg-secondary object-cover"
@@ -657,7 +726,9 @@ exports[`ItemHeader renders with scoped registry item 1`] = `
             </gui-scroll-bar>
           </gui-scroll-area>
         </div>
-        <div class="flex h-[31.508px] items-center gap-2">
+      </div>
+      <div class="flex w-full items-center justify-between gap-2 py-1">
+        <div class="flex items-center gap-2">
           <gui-avatar>
             <gui-avatar-image
               classname="size-5 rounded-sm border-[1px] border-border"
@@ -683,6 +754,14 @@ exports[`ItemHeader renders with scoped registry item 1`] = `
               </gui-tooltip-portal>
             </gui-tooltip>
           </gui-tooltip-provider>
+        </div>
+        <div class="flex items-center gap-2">
+          <p class="text-baseline cursor-default text-xs font-medium text-muted-foreground">
+            <span class="mr-1 text-foreground">
+              0
+            </span>
+            Downloads last week
+          </p>
         </div>
       </div>
     </div>
